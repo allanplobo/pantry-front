@@ -7,7 +7,7 @@
 
 # Pantry Front End
 
-Front end developed to consume [Pantry API](https://github.com/allanplobo/pantry-api)
+System for managing your pantry's products, consuming the [Pantry API](https://github.com/allanplobo/pantry-api)
 
 ## Tech Stack
 
