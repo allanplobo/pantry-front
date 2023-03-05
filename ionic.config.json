@@ -1,0 +1,7 @@
+{
+  "name": "pantry-front",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
