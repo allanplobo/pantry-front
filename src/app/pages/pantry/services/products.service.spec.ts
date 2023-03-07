@@ -1,15 +1,15 @@
-import { IonicModule } from '@ionic/angular';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { IonicModule } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
-import { Product } from '../models/product';
+import { IProduct } from '../models/product';
 
 import { ProductsService } from './products.service';
 
-const mockProducts: Product[] = [
+const mockProducts: IProduct[] = [
   {
     id: '1',
     name: 'Product 1',
@@ -56,14 +56,14 @@ describe('ProductsService', () => {
   });
 
   it('should add a new product via POST', () => {
-    const newProduct: Product = {
+    const newProduct: IProduct = {
       name: 'New Product',
       description: 'New Product description',
       quantity: 10,
       price: 20,
     };
 
-    const mockProduct: Product = {
+    const mockProduct: IProduct = {
       id: '3',
       name: 'New Product',
       description: 'New Product description',
