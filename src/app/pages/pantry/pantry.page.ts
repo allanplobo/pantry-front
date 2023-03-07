@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ProductFormComponent } from './components/product-form/product-form.component';
-import { IProduct } from './models/product';
+import { IProduct, Product } from './models/product';
 import { ProductsService } from './services/products.service';
 
 @Component({
@@ -12,12 +12,7 @@ import { ProductsService } from './services/products.service';
 })
 export class PantryPage implements OnInit {
   loadingProducts = true;
-  productsMock = [
-    { name: 'Arroz', quantity: 50, price: 16 },
-    { name: 'Feijão', quantity: 1, price: 10 },
-  ];
-
-  products: IProduct[] = this.productsMock;
+  products!: IProduct[];
 
   constructor(
     private productsService: ProductsService,
@@ -25,6 +20,10 @@ export class PantryPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getAllProducts();
+  }
+
+  getAllProducts(): void {
     this.productsService.getProducts().subscribe((response) => {
       this.products = response;
     });
@@ -36,6 +35,12 @@ export class PantryPage implements OnInit {
     });
     modal.present();
     const { data } = await modal.onWillDismiss();
-    console.log('DATA FROM FORM', data);
+
+    if (data) {
+      this.productsService.newProduct(data).subscribe((response) => {
+        console.log('SAVED', response);
+        this.products.push(data);
+      });
+    }
   }
 }

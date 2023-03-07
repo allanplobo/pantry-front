@@ -14,7 +14,7 @@ export class ProductsService {
     return this.httpClient.get<IProduct[]>(this.baseUrl);
   }
 
-  newProduct(newProduct: IProduct): Observable<IProduct> {
-    return this.httpClient.post<IProduct>(this.baseUrl, { newProduct });
+  newProduct(product: IProduct): Observable<IProduct> {
+    return this.httpClient.post<IProduct>(this.baseUrl, product);
   }
 }

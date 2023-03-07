@@ -1,9 +1,5 @@
-export interface IProduct {
+export interface IProduct extends Product {
   id?: string;
-  name: string;
-  description?: string;
-  quantity: number;
-  price: number;
 }
 
 export class Product {

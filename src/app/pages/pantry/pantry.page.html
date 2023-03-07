@@ -28,7 +28,7 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ion-list *ngIf="products.length; else emptyPantry">
+      <ion-list *ngIf="products; else emptyPantry">
         <ion-item-divider class="ion-no-padding">
           <ion-grid>
             <ion-row>
