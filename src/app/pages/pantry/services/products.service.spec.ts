@@ -1,3 +1,4 @@
+import { IonicModule } from '@ionic/angular';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -25,7 +26,7 @@ describe('ProductsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, IonicModule],
       providers: [ProductsService],
     });
 
@@ -36,6 +37,8 @@ describe('ProductsService', () => {
   afterEach(() => {
     httpMock.verify();
   });
+
+  // TODO: Create error cases after implement the handleError logic
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -50,5 +53,31 @@ describe('ProductsService', () => {
     const mockReq = httpMock.expectOne(`${environment.baseURL}pantry/products`);
     expect(mockReq.request.method).toBe('GET');
     mockReq.flush(mockProducts);
+  });
+
+  it('should add a new product via POST', () => {
+    const newProduct: Product = {
+      name: 'New Product',
+      description: 'New Product description',
+      quantity: 10,
+      price: 20,
+    };
+
+    const mockProduct: Product = {
+      id: '3',
+      name: 'New Product',
+      description: 'New Product description',
+      quantity: 10,
+      price: 20,
+    };
+
+    service.newProduct(newProduct).subscribe((product) => {
+      expect(product).toEqual(mockProduct);
+    });
+
+    const mockReq = httpMock.expectOne(`${environment.baseURL}pantry/products`);
+    expect(mockReq.request.method).toBe('POST');
+    expect(mockReq.request.body.newProduct).toEqual(newProduct);
+    mockReq.flush(mockProduct);
   });
 });
