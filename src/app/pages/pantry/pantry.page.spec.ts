@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
@@ -10,7 +11,7 @@ describe('PantryPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PantryPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantryPage);
