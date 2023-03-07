@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 import { ProductFormComponent } from './components/product-form/product-form.component';
 import { IProduct, Product } from './models/product';
 import { ProductsService } from './services/products.service';
@@ -11,22 +12,26 @@ import { ProductsService } from './services/products.service';
   providers: [ProductsService],
 })
 export class PantryPage implements OnInit {
-  loadingProducts = true;
   products!: IProduct[];
 
   constructor(
     private productsService: ProductsService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit(): void {
     this.getAllProducts();
   }
 
-  getAllProducts(): void {
-    this.productsService.getProducts().subscribe((response) => {
-      this.products = response;
-    });
+  async getAllProducts() {
+    const load = await this.showLoading('Loading products...');
+    this.productsService
+      .getProducts()
+      .pipe(finalize(() => load.dismiss()))
+      .subscribe((response) => {
+        this.products = response;
+      });
   }
 
   async createProduct() {
@@ -37,10 +42,21 @@ export class PantryPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data) {
-      this.productsService.newProduct(data).subscribe((response) => {
-        console.log('SAVED', response);
-        this.products.push(data);
-      });
+      const load = await this.showLoading('Saving new product...');
+      this.productsService
+        .newProduct(data)
+        .pipe(finalize(() => load.dismiss()))
+        .subscribe((response) => {
+          this.products.push(response);
+        });
     }
+  }
+
+  private async showLoading(message: string): Promise<HTMLIonLoadingElement> {
+    const load = await this.loadingCtrl.create({
+      message: message,
+    });
+    load.present();
+    return load;
   }
 }

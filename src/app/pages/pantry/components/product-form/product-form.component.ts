@@ -59,6 +59,7 @@ export class ProductFormComponent implements OnInit {
 
   confirm() {
     const productInfo = this.buildProduct();
+    console.log('FIM');
     return this.modalCtrl.dismiss(productInfo);
   }
 
