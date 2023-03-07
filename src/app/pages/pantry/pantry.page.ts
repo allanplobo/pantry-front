@@ -1,6 +1,8 @@
-import { ProductsService } from './services/products.service';
 import { Component, OnInit } from '@angular/core';
-import { Product } from './models/product';
+import { ModalController } from '@ionic/angular';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { IProduct } from './models/product';
+import { ProductsService } from './services/products.service';
 
 @Component({
   selector: 'app-pantry',
@@ -15,13 +17,25 @@ export class PantryPage implements OnInit {
     { name: 'Feijão', quantity: 1, price: 10 },
   ];
 
-  products: Product[] = this.productsMock;
+  products: IProduct[] = this.productsMock;
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private modalCtrl: ModalController
+  ) {}
 
   ngOnInit(): void {
     this.productsService.getProducts().subscribe((response) => {
       this.products = response;
     });
+  }
+
+  async createProduct() {
+    const modal = await this.modalCtrl.create({
+      component: ProductFormComponent,
+    });
+    modal.present();
+    const { data } = await modal.onWillDismiss();
+    console.log('DATA FROM FORM', data);
   }
 }
