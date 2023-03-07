@@ -1,3 +1,4 @@
+import { NotificationsService } from './../../services/notifications.service';
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { finalize } from 'rxjs';
@@ -17,7 +18,8 @@ export class PantryPage implements OnInit {
   constructor(
     private productsService: ProductsService,
     private modalCtrl: ModalController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private notificationsService: NotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +50,10 @@ export class PantryPage implements OnInit {
         .pipe(finalize(() => load.dismiss()))
         .subscribe((response) => {
           this.products.push(response);
+          this.notificationsService.showToast(
+            `Product ${response.name} was successfully created`,
+            'success'
+          );
         });
     }
   }
