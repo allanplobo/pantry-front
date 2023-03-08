@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 import { environment } from './../../../../environments/environment';
-import { IProduct } from './../models/product';
+import { IProduct, Product } from './../models/product';
 
 @Injectable()
 export class ProductsService {
@@ -18,7 +18,7 @@ export class ProductsService {
     return this.httpClient.get<IProduct[]>(this.baseUrl);
   }
 
-  newProduct(product: IProduct): Observable<IProduct> {
+  newProduct(product: Product): Observable<IProduct> {
     return this.httpClient.post<IProduct>(this.baseUrl, product).pipe(
       catchError((error) => {
         const { message } = error.error;
@@ -26,6 +26,18 @@ export class ProductsService {
         throw error;
       })
     );
+  }
+
+  editProduct(productId: string, product: Product): Observable<IProduct> {
+    return this.httpClient
+      .put<IProduct>(`${this.baseUrl}/${productId}`, product)
+      .pipe(
+        catchError((error) => {
+          const { message } = error.error;
+          this.handleError(message);
+          throw error;
+        })
+      );
   }
 
   deleteProduct(productId: string): Observable<{ message: string }> {

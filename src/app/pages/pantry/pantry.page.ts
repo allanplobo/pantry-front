@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {
   ActionSheetController,
   AlertController,
-  LoadingController,
   ModalController,
 } from '@ionic/angular';
 import { finalize, Observable } from 'rxjs';
 import { FeedbackService } from '../../services/feedback.service';
-import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { IProduct } from './models/product';
 import { ProductsService } from './services/products.service';
 
@@ -41,7 +40,7 @@ export class PantryPage implements OnInit {
 
   async createProduct() {
     const modal = await this.modalCtrl.create({
-      component: ProductFormComponent,
+      component: ProductDetailsComponent,
     });
     modal.present();
     const { data } = await modal.onWillDismiss();
@@ -61,6 +60,9 @@ export class PantryPage implements OnInit {
       buttons: [
         {
           text: 'See details',
+          handler: async () => {
+            await this.seeProductDetails(product);
+          },
         },
         {
           text: 'Edit',
@@ -83,6 +85,16 @@ export class PantryPage implements OnInit {
     });
 
     await actionSheet.present();
+  }
+
+  async seeProductDetails(product: IProduct) {
+    const modal = await this.modalCtrl.create({
+      component: ProductDetailsComponent,
+      componentProps: {
+        productInfo: product,
+      },
+    });
+    modal.present();
   }
 
   async handleDelete(product: IProduct): Promise<void> {

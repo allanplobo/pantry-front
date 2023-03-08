@@ -3,12 +3,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ProductsService } from './../../services/products.service';
-import { ProductFormComponent } from './product-form.component';
+import { ProductsService } from '../../services/products.service';
+import { ProductDetailsComponent } from './product-details.component';
 
-describe('ProductFormComponent', () => {
-  let component: ProductFormComponent;
-  let fixture: ComponentFixture<ProductFormComponent>;
+describe('ProductDetailsComponent', () => {
+  let component: ProductDetailsComponent;
+  let fixture: ComponentFixture<ProductDetailsComponent>;
   let productsServiceSpy: jasmine.SpyObj<ProductsService>;
   let modalControllerSpy: jasmine.SpyObj<ModalController>;
 
@@ -17,7 +17,7 @@ describe('ProductFormComponent', () => {
       imports: [
         IonicModule.forRoot(),
         ReactiveFormsModule,
-        ProductFormComponent,
+        ProductDetailsComponent,
         HttpClientTestingModule,
       ],
       providers: [
@@ -28,7 +28,7 @@ describe('ProductFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProductFormComponent);
+    fixture = TestBed.createComponent(ProductDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>New Product</ion-title>
+    <ion-title>{{
+      productInfo ? "Product Information" : "New Product"
+    }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cancel()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -43,8 +45,8 @@
       <ion-input formControlName="price" type="number"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" type="submit" [disabled]="productForm.invalid"
-      >Save</ion-button
-    >
+    <ion-button expand="block" type="submit" [disabled]="productForm.invalid">{{
+      !isEditing ? "Edit product" : "Save"
+    }}</ion-button>
   </form>
 </ion-content>
