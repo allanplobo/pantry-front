@@ -9,7 +9,7 @@ type ToastColors = 'success' | 'warning' | 'danger';
 export class NotificationsService {
   constructor(private toastController: ToastController) {}
 
-  async showToast(message: string, type: ToastColors) {
+  async showToast(message: string, type: ToastColors): Promise<void> {
     const toast = await this.toastController.create({
       message: message,
       duration: 5000,

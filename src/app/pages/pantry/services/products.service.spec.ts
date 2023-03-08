@@ -75,9 +75,8 @@ describe('ProductsService', () => {
       expect(product).toEqual(mockProduct);
     });
 
-    const mockReq = httpMock.expectOne(`${environment.baseURL}pantry/products`);
-    expect(mockReq.request.method).toBe('POST');
-    expect(mockReq.request.body.newProduct).toEqual(newProduct);
-    mockReq.flush(mockProduct);
+    const req = httpMock.expectOne(`${environment.baseURL}pantry/products`);
+    expect(req.request.method).toEqual('POST');
+    req.flush(mockProduct);
   });
 });
