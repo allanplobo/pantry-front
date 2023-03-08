@@ -27,7 +27,9 @@ export class PantryPage implements OnInit {
   }
 
   async getAllProducts() {
-    const load = await this.showLoading('Loading products...');
+    const load = await this.loadingCtrl.create({
+      message: 'Loading products...',
+    });
     this.productsService
       .getProducts()
       .pipe(finalize(() => load.dismiss()))
@@ -44,25 +46,11 @@ export class PantryPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data) {
-      const load = await this.showLoading('Saving new product...');
-      this.productsService
-        .newProduct(data)
-        .pipe(finalize(() => load.dismiss()))
-        .subscribe((response) => {
-          this.products.push(response);
-          this.notificationsService.showToast(
-            `Product ${response.name} was successfully created`,
-            'success'
-          );
-        });
+      this.products.push(data);
+      this.notificationsService.showToast(
+        `Product ${data.name} was successfully created`,
+        'success'
+      );
     }
-  }
-
-  private async showLoading(message: string): Promise<HTMLIonLoadingElement> {
-    const load = await this.loadingCtrl.create({
-      message: message,
-    });
-    load.present();
-    return load;
   }
 }

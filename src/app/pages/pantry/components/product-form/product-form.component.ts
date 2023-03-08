@@ -1,3 +1,4 @@
+import { ProductsService } from './../../services/products.service';
 import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
@@ -5,8 +6,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ModalController, IonicModule } from '@ionic/angular';
+import {
+  ModalController,
+  IonicModule,
+  LoadingController,
+} from '@ionic/angular';
 import { IProduct, Product } from '../../models/product';
+import { finalize } from 'rxjs';
 
 interface ProductForm {
   id?: FormControl<string>;
@@ -22,6 +28,7 @@ interface ProductForm {
   styleUrls: ['./product-form.component.scss'],
   standalone: true,
   imports: [ReactiveFormsModule, IonicModule],
+  providers: [ProductsService],
 })
 export class ProductFormComponent implements OnInit {
   productToEdit!: IProduct;
@@ -47,7 +54,11 @@ export class ProductFormComponent implements OnInit {
     price: new FormControl(null, [Validators.required]),
   });
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private productsService: ProductsService,
+    private loadingCtrl: LoadingController
+  ) {}
 
   ngOnInit(): void {
     // TODO: create lo populate form if it informed in productToEdit
@@ -57,14 +68,18 @@ export class ProductFormComponent implements OnInit {
     return this.modalCtrl.dismiss(false);
   }
 
-  confirm() {
+  async handleSubmit() {
     const productInfo = this.buildProduct();
-    console.log('FIM');
-    return this.modalCtrl.dismiss(productInfo);
-  }
+    const load = await this.showLoading('Saving new product...');
 
-  showCharRemainingCounter(inputLength: number, maxLength: number) {
-    return `${maxLength - inputLength} characters remaining`;
+    if (productInfo) {
+      this.productsService
+        .newProduct(productInfo)
+        .pipe(finalize(() => load.dismiss()))
+        .subscribe((productCreated) => {
+          return this.modalCtrl.dismiss(productCreated);
+        });
+    }
   }
 
   private buildProduct() {
@@ -75,5 +90,17 @@ export class ProductFormComponent implements OnInit {
     }
 
     return false;
+  }
+
+  private async showLoading(message: string): Promise<HTMLIonLoadingElement> {
+    const load = await this.loadingCtrl.create({
+      message: message,
+    });
+    load.present();
+    return load;
+  }
+
+  showCharRemainingCounter(inputLength: number, maxLength: number) {
+    return `${maxLength - inputLength} characters remaining`;
   }
 }
