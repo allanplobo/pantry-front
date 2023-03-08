@@ -5,7 +5,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { IProduct } from '../models/product';
-import { NotificationsService } from './../../../services/notifications.service';
+import { FeedbackService } from '../../../services/feedback.service';
 
 import { ProductsService } from './products.service';
 
@@ -28,20 +28,20 @@ describe('ProductsService', () => {
   let httpClientSpy: { get: jasmine.Spy };
   let service: ProductsService;
   let httpMock: HttpTestingController;
-  let notificationsService: NotificationsService;
+  let feedbackService: FeedbackService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, IonicModule],
       providers: [
         ProductsService,
-        { provide: NotificationsService, useValue: notificationsServiceMock },
+        { provide: FeedbackService, useValue: notificationsServiceMock },
       ],
     });
 
     service = TestBed.inject(ProductsService);
     httpMock = TestBed.inject(HttpTestingController);
-    notificationsService = TestBed.inject(NotificationsService);
+    feedbackService = TestBed.inject(FeedbackService);
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
   });
 

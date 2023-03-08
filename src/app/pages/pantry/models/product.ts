@@ -1,5 +1,5 @@
 export interface IProduct extends Product {
-  id?: string;
+  _id?: string;
 }
 
 export class Product {

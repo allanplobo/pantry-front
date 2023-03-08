@@ -1,4 +1,4 @@
-import { NotificationsService } from './../../../services/notifications.service';
+import { FeedbackService } from '../../../services/feedback.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
@@ -11,7 +11,7 @@ export class ProductsService {
 
   constructor(
     private httpClient: HttpClient,
-    private notificationsService: NotificationsService
+    private feedbackService: FeedbackService
   ) {}
 
   getProducts(): Observable<IProduct[]> {
@@ -28,8 +28,20 @@ export class ProductsService {
     );
   }
 
+  deleteProduct(productId: string): Observable<{ message: string }> {
+    return this.httpClient
+      .delete<{ message: string }>(`${this.baseUrl}/${productId}`)
+      .pipe(
+        catchError((error) => {
+          const { message } = error.error;
+          this.handleError(message);
+          throw error;
+        })
+      );
+  }
+
   private handleError(errorMessage: string) {
-    this.notificationsService.showToast(
+    this.feedbackService.showToast(
       errorMessage || 'Something went wrong! Please, try again!',
       'danger'
     );

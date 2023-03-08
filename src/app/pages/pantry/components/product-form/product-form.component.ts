@@ -1,4 +1,3 @@
-import { ProductsService } from './../../services/products.service';
 import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
@@ -6,13 +5,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  ModalController,
-  IonicModule,
-  LoadingController,
-} from '@ionic/angular';
-import { IProduct, Product } from '../../models/product';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { finalize } from 'rxjs';
+import { IProduct, Product } from '../../models/product';
+import { FeedbackService } from './../../../../services/feedback.service';
+import { ProductsService } from './../../services/products.service';
 
 interface ProductForm {
   id?: FormControl<string>;
@@ -57,7 +54,7 @@ export class ProductFormComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private productsService: ProductsService,
-    private loadingCtrl: LoadingController
+    private feedbackService: FeedbackService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +67,9 @@ export class ProductFormComponent implements OnInit {
 
   async handleSubmit() {
     const productInfo = this.buildProduct();
-    const load = await this.showLoading('Saving new product...');
+    const load = await this.feedbackService.showLoading(
+      'Saving new product...'
+    );
 
     if (productInfo) {
       this.productsService
@@ -90,14 +89,6 @@ export class ProductFormComponent implements OnInit {
     }
 
     return false;
-  }
-
-  private async showLoading(message: string): Promise<HTMLIonLoadingElement> {
-    const load = await this.loadingCtrl.create({
-      message: message,
-    });
-    load.present();
-    return load;
   }
 
   showCharRemainingCounter(inputLength: number, maxLength: number) {

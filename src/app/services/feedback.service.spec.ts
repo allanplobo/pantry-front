@@ -1,24 +1,24 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { ToastController, ToastOptions } from '@ionic/angular';
-import { NotificationsService } from './notifications.service';
+import { FeedbackService } from './feedback.service';
 
 type ToastColors = 'success' | 'warning' | 'danger';
 
-describe('NotificationsService', () => {
+describe('FeedbackService', () => {
   let toastController: ToastController;
-  let notificationsService: NotificationsService;
+  let feedbackService: FeedbackService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ToastController, NotificationsService],
+      providers: [ToastController, FeedbackService],
     });
     toastController = TestBed.inject(ToastController);
-    notificationsService = TestBed.inject(NotificationsService);
+    feedbackService = TestBed.inject(FeedbackService);
   });
 
   it('should create the service', inject(
-    [NotificationsService],
-    (service: NotificationsService) => {
+    [FeedbackService],
+    (service: FeedbackService) => {
       expect(service).toBeTruthy();
     }
   ));
@@ -36,7 +36,7 @@ describe('NotificationsService', () => {
 
     it('should create a success toast', async () => {
       const toastSpy = spyOn(toastController, 'create').and.callThrough();
-      await notificationsService.showToast(message, successType);
+      await feedbackService.showToast(message, successType);
       const expectedCall: ToastOptions = {
         ...defaultToastOptions,
         message: message,
@@ -48,7 +48,7 @@ describe('NotificationsService', () => {
 
     it('should create a warning toast', async () => {
       const toastSpy = spyOn(toastController, 'create').and.callThrough();
-      await notificationsService.showToast(message, warningType);
+      await feedbackService.showToast(message, warningType);
       const expectedCall: ToastOptions = {
         ...defaultToastOptions,
         message: message,
@@ -60,7 +60,7 @@ describe('NotificationsService', () => {
 
     it('should create a danger toast', async () => {
       const toastSpy = spyOn(toastController, 'create').and.callThrough();
-      await notificationsService.showToast(message, dangerType);
+      await feedbackService.showToast(message, dangerType);
       const expectedCall: ToastOptions = {
         ...defaultToastOptions,
         message: message,
