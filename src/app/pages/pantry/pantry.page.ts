@@ -41,6 +41,9 @@ export class PantryPage implements OnInit {
   async createProduct() {
     const modal = await this.modalCtrl.create({
       component: ProductDetailsComponent,
+      componentProps: {
+        enableProductForm: true,
+      },
     });
     modal.present();
     const { data } = await modal.onWillDismiss();
@@ -60,12 +63,15 @@ export class PantryPage implements OnInit {
       buttons: [
         {
           text: 'See details',
-          handler: async () => {
-            await this.seeProductDetails(product);
+          handler: () => {
+            this.seeProductDetails(product);
           },
         },
         {
           text: 'Edit',
+          handler: () => {
+            this.handleEditProduct(product);
+          },
         },
         {
           text: 'Delete',
@@ -94,7 +100,38 @@ export class PantryPage implements OnInit {
         productInfo: product,
       },
     });
+
     modal.present();
+    await modal.onWillDismiss().then(({ data }) => {
+      if (data) {
+        this.feedbackService.showToast(
+          `Product edited successfully!`,
+          'success'
+        );
+        this.getAllProducts();
+      }
+    });
+  }
+
+  async handleEditProduct(product: IProduct) {
+    const modal = await this.modalCtrl.create({
+      component: ProductDetailsComponent,
+      componentProps: {
+        productInfo: product,
+        enableProductForm: true,
+      },
+    });
+
+    modal.present();
+    await modal.onWillDismiss().then(({ data }) => {
+      if (data) {
+        this.feedbackService.showToast(
+          `Product edited successfully!`,
+          'success'
+        );
+        this.getAllProducts();
+      }
+    });
   }
 
   async handleDelete(product: IProduct): Promise<void> {

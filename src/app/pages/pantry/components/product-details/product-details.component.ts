@@ -29,7 +29,7 @@ interface ProductForm {
 })
 export class ProductDetailsComponent implements OnInit {
   productInfo!: IProduct;
-  isEditing!: boolean;
+  enableProductForm!: boolean;
 
   productForm = new FormGroup<ProductForm>({
     id: new FormControl('', {
@@ -69,11 +69,15 @@ export class ProductDetailsComponent implements OnInit {
       if (this.productForm.get(key)) {
         this.productForm
           .get(key)
-          ?.patchValue(this.productInfo[key as keyof IProduct]);
+          ?.patchValue(this.productInfo[key as keyof IProduct], {
+            emitEvent: false,
+          });
       }
     });
 
-    this.productForm.disable();
+    if (!this.enableProductForm) {
+      this.productForm.disable();
+    }
   }
 
   cancel() {
@@ -86,9 +90,9 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
 
-    if (!this.isEditing) {
+    if (!this.enableProductForm) {
       this.productForm.enable();
-      this.isEditing = !this.isEditing;
+      this.enableProductForm = !this.enableProductForm;
       return;
     }
 
