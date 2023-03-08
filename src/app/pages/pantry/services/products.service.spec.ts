@@ -4,10 +4,14 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { IProduct } from '../models/product';
+import { NotificationsService } from './../../../services/notifications.service';
 
 import { ProductsService } from './products.service';
+
+const notificationsServiceMock = {
+  showToast: jasmine.createSpy('showToast'),
+};
 
 const mockProducts: IProduct[] = [
   {
@@ -21,24 +25,29 @@ const mockProducts: IProduct[] = [
 ];
 
 describe('ProductsService', () => {
+  let httpClientSpy: { get: jasmine.Spy };
   let service: ProductsService;
   let httpMock: HttpTestingController;
+  let notificationsService: NotificationsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, IonicModule],
-      providers: [ProductsService],
+      providers: [
+        ProductsService,
+        { provide: NotificationsService, useValue: notificationsServiceMock },
+      ],
     });
 
     service = TestBed.inject(ProductsService);
     httpMock = TestBed.inject(HttpTestingController);
+    notificationsService = TestBed.inject(NotificationsService);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
   });
 
   afterEach(() => {
     httpMock.verify();
   });
-
-  // TODO: Create error cases after implement the handleError logic
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -50,7 +59,7 @@ describe('ProductsService', () => {
       expect(products).toEqual(mockProducts);
     });
 
-    const mockReq = httpMock.expectOne(`${environment.baseURL}pantry/products`);
+    const mockReq = httpMock.expectOne(service['baseUrl']);
     expect(mockReq.request.method).toBe('GET');
     mockReq.flush(mockProducts);
   });
@@ -75,8 +84,25 @@ describe('ProductsService', () => {
       expect(product).toEqual(mockProduct);
     });
 
-    const req = httpMock.expectOne(`${environment.baseURL}pantry/products`);
+    const req = httpMock.expectOne(service['baseUrl']);
     expect(req.request.method).toEqual('POST');
     req.flush(mockProduct);
+  });
+
+  it('should call the showToast method of the notifications service with the correct parameters', () => {
+    const errorMessage = 'An error occurred';
+    service['handleError'](errorMessage);
+    expect(notificationsServiceMock.showToast).toHaveBeenCalledWith(
+      errorMessage,
+      'danger'
+    );
+  });
+
+  it('should call the showToast method of the notifications service with the default error message and the correct parameters', () => {
+    service['handleError']('');
+    expect(notificationsServiceMock.showToast).toHaveBeenCalledWith(
+      'Something went wrong! Please, try again!',
+      'danger'
+    );
   });
 });
