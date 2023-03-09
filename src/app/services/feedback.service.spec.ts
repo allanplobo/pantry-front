@@ -1,73 +1,100 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { ToastController, ToastOptions } from '@ionic/angular';
 import { FeedbackService } from './feedback.service';
-
-type ToastColors = 'success' | 'warning' | 'danger';
+import {
+  ToastController,
+  LoadingController,
+  ToastOptions,
+} from '@ionic/angular';
 
 describe('FeedbackService', () => {
-  let toastController: ToastController;
   let feedbackService: FeedbackService;
+  let toastControllerSpy: jasmine.SpyObj<ToastController>;
+  let loadingControllerSpy: jasmine.SpyObj<LoadingController>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ToastController, FeedbackService],
-    });
-    toastController = TestBed.inject(ToastController);
-    feedbackService = TestBed.inject(FeedbackService);
+    toastControllerSpy = jasmine.createSpyObj('ToastController', [
+      'create',
+      'present',
+    ]);
+    loadingControllerSpy = jasmine.createSpyObj('LoadingController', [
+      'create',
+      'present',
+    ]);
+    feedbackService = new FeedbackService(
+      toastControllerSpy,
+      loadingControllerSpy
+    );
   });
 
-  it('should create the service', inject(
-    [FeedbackService],
-    (service: FeedbackService) => {
-      expect(service).toBeTruthy();
-    }
-  ));
+  it('should be created', () => {
+    expect(feedbackService).toBeTruthy();
+  });
 
   describe('showToast', () => {
-    const message = 'Test message';
-    const successType: ToastColors = 'success';
-    const warningType: ToastColors = 'warning';
-    const dangerType: ToastColors = 'danger';
+    const successType = 'success';
+    const warningType = 'warning';
+    const dangerType = 'danger';
     const defaultToastOptions: ToastOptions = {
+      message: 'Test message',
       duration: 5000,
       position: 'top',
-      color: 'danger',
     };
 
-    it('should create a success toast', async () => {
-      const toastSpy = spyOn(toastController, 'create').and.callThrough();
-      await feedbackService.showToast(message, successType);
+    it('should create and present a toast with the given message and success type', async () => {
+      const toastSpy = jasmine.createSpyObj('toast', ['present']);
+      toastControllerSpy.create.and.returnValue(Promise.resolve(toastSpy));
+
+      await feedbackService.showToast('Test message', successType);
       const expectedCall: ToastOptions = {
         ...defaultToastOptions,
-        message: message,
         color: successType,
       };
 
-      expect(toastSpy).toHaveBeenCalledWith(expectedCall);
+      expect(toastControllerSpy.create).toHaveBeenCalledWith(expectedCall);
+      expect(toastSpy.present).toHaveBeenCalled();
     });
 
-    it('should create a warning toast', async () => {
-      const toastSpy = spyOn(toastController, 'create').and.callThrough();
-      await feedbackService.showToast(message, warningType);
+    it('should create and present a toast with the given message and warning type', async () => {
+      const toastSpy = jasmine.createSpyObj('toast', ['present']);
+      toastControllerSpy.create.and.returnValue(Promise.resolve(toastSpy));
+
+      await feedbackService.showToast('Test message', warningType);
       const expectedCall: ToastOptions = {
         ...defaultToastOptions,
-        message: message,
         color: warningType,
       };
 
-      expect(toastSpy).toHaveBeenCalledWith(expectedCall);
+      expect(toastControllerSpy.create).toHaveBeenCalledWith(expectedCall);
+      expect(toastSpy.present).toHaveBeenCalled();
     });
 
-    it('should create a danger toast', async () => {
-      const toastSpy = spyOn(toastController, 'create').and.callThrough();
-      await feedbackService.showToast(message, dangerType);
+    it('should create and present a toast with the given message and danger type', async () => {
+      const toastSpy = jasmine.createSpyObj('toast', ['present']);
+      toastControllerSpy.create.and.returnValue(Promise.resolve(toastSpy));
+
+      await feedbackService.showToast('Test message', dangerType);
       const expectedCall: ToastOptions = {
         ...defaultToastOptions,
-        message: message,
         color: dangerType,
       };
 
-      expect(toastSpy).toHaveBeenCalledWith(expectedCall);
+      expect(toastControllerSpy.create).toHaveBeenCalledWith(expectedCall);
+      expect(toastSpy.present).toHaveBeenCalled();
+    });
+  });
+
+  describe('showLoading', () => {
+    it('should create and present a loading indicator with the given message', async () => {
+      const message = 'test message';
+      const loadingSpy = jasmine.createSpyObj('loading', ['present']);
+      loadingControllerSpy.create.and.returnValue(Promise.resolve(loadingSpy));
+
+      const result = await feedbackService.showLoading(message);
+
+      expect(loadingControllerSpy.create).toHaveBeenCalledWith({
+        message: message,
+      });
+      expect(loadingSpy.present).toHaveBeenCalled();
+      expect(result).toBe(loadingSpy);
     });
   });
 });
