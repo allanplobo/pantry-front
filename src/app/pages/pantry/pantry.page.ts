@@ -18,6 +18,7 @@ import { ProductsService } from './services/products.service';
 })
 export class PantryPage implements OnInit {
   products$!: Observable<IProduct[]>;
+  searchingProductByName = false;
 
   constructor(
     private productsService: ProductsService,
@@ -168,5 +169,13 @@ export class PantryPage implements OnInit {
         );
         this.getAllProducts();
       });
+  }
+
+  searchByName(searchEvent: unknown) {
+    const customEvent = searchEvent as CustomEvent;
+    this.searchingProductByName = true;
+    this.products$ = this.productsService
+      .searchProductByName(customEvent.detail.value)
+      .pipe(finalize(() => (this.searchingProductByName = false)));
   }
 }

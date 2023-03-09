@@ -15,7 +15,25 @@ export class ProductsService {
   ) {}
 
   getProducts(): Observable<IProduct[]> {
-    return this.httpClient.get<IProduct[]>(this.baseUrl);
+    return this.httpClient.get<IProduct[]>(this.baseUrl).pipe(
+      catchError((error) => {
+        const { message } = error.error;
+        this.handleError(message);
+        throw error;
+      })
+    );
+  }
+
+  searchProductByName(productName: string): Observable<IProduct[]> {
+    return this.httpClient
+      .get<IProduct[]>(`${this.baseUrl}/search/${productName}`)
+      .pipe(
+        catchError((error) => {
+          const { message } = error.error;
+          this.handleError(message);
+          throw error;
+        })
+      );
   }
 
   newProduct(product: Product): Observable<IProduct> {
