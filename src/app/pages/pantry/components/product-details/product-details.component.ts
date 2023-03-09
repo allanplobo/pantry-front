@@ -64,7 +64,7 @@ export class ProductDetailsComponent implements OnInit {
       if (this.productForm.get(key) && key !== '_id') {
         this.productForm
           .get(key)
-          ?.patchValue(this.productInfo[key as keyof IProduct], {
+          ?.setValue(this.productInfo[key as keyof IProduct], {
             emitEvent: false,
           });
       }
@@ -79,7 +79,7 @@ export class ProductDetailsComponent implements OnInit {
     return this.modalCtrl.dismiss(false);
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     if (!this.productInfo) {
       this.createProduct();
       return;
