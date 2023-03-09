@@ -4,7 +4,7 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { IProduct } from '../models/product';
+import { IProduct, Product } from '../models/product';
 import { FeedbackService } from '../../../services/feedback.service';
 
 import { ProductsService } from './products.service';
@@ -15,13 +15,13 @@ const notificationsServiceMock = {
 
 const mockProducts: IProduct[] = [
   {
-    id: '1',
+    _id: '1',
     name: 'Product 1',
     description: 'Product 1 description',
     quantity: 10,
     price: 20,
   },
-  { id: '2', name: 'Product 2', quantity: 5, price: 10 },
+  { _id: '2', name: 'Product 2', quantity: 5, price: 10 },
 ];
 
 describe('ProductsService', () => {
@@ -65,15 +65,15 @@ describe('ProductsService', () => {
   });
 
   it('should add a new product via POST', () => {
-    const newProduct: IProduct = {
-      name: 'New Product',
-      description: 'New Product description',
-      quantity: 10,
-      price: 20,
-    };
+    const newProduct = new Product(
+      'New Product',
+      'New Product description',
+      10,
+      20
+    );
 
     const mockProduct: IProduct = {
-      id: '3',
+      _id: '3',
       name: 'New Product',
       description: 'New Product description',
       quantity: 10,
