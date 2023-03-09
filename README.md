@@ -31,6 +31,9 @@ $ ionic serve
 # run unit tests
 $ npm run test
 
+# run tests coverage
+$ npm run coverage
+
 ```
 
 ## My LinkedIn
