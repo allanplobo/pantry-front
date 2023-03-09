@@ -26,7 +26,7 @@ export class ProductsService {
 
   searchProductByName(productName: string): Observable<IProduct[]> {
     return this.httpClient
-      .get<IProduct[]>(`${this.baseUrl}/search/${productName}`)
+      .get<IProduct[]>(`${this.baseUrl}/${productName}`)
       .pipe(
         catchError((error) => {
           const { message } = error.error;
