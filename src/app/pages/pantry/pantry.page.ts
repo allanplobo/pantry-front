@@ -4,7 +4,7 @@ import {
   AlertController,
   ModalController,
 } from '@ionic/angular';
-import { finalize, Observable } from 'rxjs';
+import { finalize, Observable, catchError } from 'rxjs';
 import { FeedbackService } from '../../services/feedback.service';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { IProduct } from './models/product';
@@ -34,9 +34,13 @@ export class PantryPage implements OnInit {
 
   async getAllProducts() {
     const load = await this.feedbackService.showLoading('Loading products...');
-    this.products$ = this.productsService
-      .getProducts()
-      .pipe(finalize(() => load.dismiss()));
+    this.products$ = this.productsService.getProducts().pipe(
+      finalize(() => load.dismiss()),
+      catchError((error) => {
+        console.error('Error in Pantry Page ->  getAllProducts', error);
+        return [];
+      })
+    );
   }
 
   async createProduct() {
@@ -176,6 +180,12 @@ export class PantryPage implements OnInit {
     this.searchingProductByName = true;
     this.products$ = this.productsService
       .searchProductByName(customEvent.detail.value)
-      .pipe(finalize(() => (this.searchingProductByName = false)));
+      .pipe(
+        finalize(() => (this.searchingProductByName = false)),
+        catchError((error) => {
+          console.error('Error in Pantry Page ->  searchByName', error);
+          return [];
+        })
+      );
   }
 }

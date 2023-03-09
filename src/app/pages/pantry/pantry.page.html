@@ -43,8 +43,8 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ng-container *ngIf="products$ | async as products">
-        <ion-list *ngIf="products.length ; else emptyPantry">
+      <ng-container *ngIf="products$ | async as products; else emptyPantry">
+        <ion-list *ngIf="products?.length ; else emptyPantry">
           <ion-item-divider class="ion-no-padding">
             <ion-grid>
               <ion-row>
