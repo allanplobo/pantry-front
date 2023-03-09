@@ -94,7 +94,7 @@ export class ProductDetailsComponent implements OnInit {
     this.editProduct();
   }
 
-  private async createProduct() {
+  async createProduct() {
     const productData = this.buildProduct();
     const load = await this.feedbackService.showLoading(
       'Saving new product...'
@@ -110,7 +110,7 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  private async editProduct() {
+  async editProduct() {
     const productData = this.buildProduct();
     const load = await this.feedbackService.showLoading('Editing product...');
 

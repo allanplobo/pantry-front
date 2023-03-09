@@ -6,6 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { IProduct } from '../../models/product';
 import { ProductsService } from '../../services/products.service';
 import { ProductDetailsComponent } from './product-details.component';
+import { FeedbackService } from 'src/app/services/feedback.service';
 
 // TODO: write unit tests
 
@@ -22,6 +23,7 @@ describe('ProductDetailsComponent', () => {
   let fixture: ComponentFixture<ProductDetailsComponent>;
   let productsServiceSpy: jasmine.SpyObj<ProductsService>;
   let modalControllerSpy: jasmine.SpyObj<ModalController>;
+  let feedbackServiceSpy: jasmine.SpyObj<FeedbackService>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -34,8 +36,19 @@ describe('ProductDetailsComponent', () => {
       providers: [
         { provide: ProductsService, useValue: productsServiceSpy },
         { provide: ModalController, useValue: modalControllerSpy },
+        { provide: FeedbackService, useValue: feedbackServiceSpy },
       ],
     }).compileComponents();
+
+    modalControllerSpy = TestBed.inject(
+      ModalController
+    ) as jasmine.SpyObj<ModalController>;
+    productsServiceSpy = TestBed.inject(
+      ProductsService
+    ) as jasmine.SpyObj<ProductsService>;
+    feedbackServiceSpy = TestBed.inject(
+      FeedbackService
+    ) as jasmine.SpyObj<FeedbackService>;
   }));
 
   beforeEach(() => {
@@ -116,6 +129,29 @@ describe('ProductDetailsComponent', () => {
         price: 2,
       });
       expect(form.valid).toBeTruthy();
+    });
+  });
+
+  describe('other logics', () => {
+    it('should call modalCtrl dismiss when click on close button', () => {
+      const spy = spyOn(component, 'cancel');
+      const button = fixture.nativeElement.querySelector('#cancel-button');
+      button.click();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call editProduct when productInfo is defined and enableProductForm is true', async () => {
+      spyOn(component, 'editProduct');
+      component.enableProductForm = true;
+      component.productInfo = {
+        _id: '123',
+        name: 'Product',
+        description: 'Description',
+        quantity: 1,
+        price: 10,
+      };
+      await component.handleSubmit();
+      expect(component['editProduct']).toHaveBeenCalled();
     });
   });
 });

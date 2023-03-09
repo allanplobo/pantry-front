@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {IonicModule} from '@ionic/angular';
-import {NotFoundPage} from './not-found.page';
-import {RouterTestingModule} from "@angular/router/testing";
-import {Router} from "@angular/router";
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { IonicModule } from '@ionic/angular';
+import { NotFoundPage } from './not-found.page';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('NotFoundPage', () => {
   let component: NotFoundPage;
@@ -27,11 +27,12 @@ describe('NotFoundPage', () => {
 
   it('should navigate to pantry page when click on button', () => {
     const expectedValue = jasmine.stringMatching(/tabs\/pantry/);
-    const routerSpy = spyOn(router, 'navigateByUrl').and.callThrough()
-    const buttonToBackToPantryPage = fixture.nativeElement.getElementsByTagName('ion-button')[0];
-    buttonToBackToPantryPage.click()
-    fixture.detectChanges()
+    const routerSpy = spyOn(router, 'navigateByUrl').and.callThrough();
+    const buttonToBackToPantryPage =
+      fixture.nativeElement.getElementsByTagName('ion-button')[0];
+    buttonToBackToPantryPage.click();
+    fixture.detectChanges();
 
-    expect(routerSpy).toHaveBeenCalledWith(expectedValue, {})
+    expect(routerSpy).toHaveBeenCalledWith(expectedValue, {});
   });
 });
