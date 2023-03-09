@@ -12,7 +12,6 @@ import { FeedbackService } from '../../../../services/feedback.service';
 import { ProductsService } from '../../services/products.service';
 
 interface ProductForm {
-  id?: FormControl<string>;
   name: FormControl<string>;
   description?: FormControl<string>;
   quantity: FormControl<number | null>;
@@ -32,10 +31,6 @@ export class ProductDetailsComponent implements OnInit {
   enableProductForm!: boolean;
 
   productForm = new FormGroup<ProductForm>({
-    id: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.minLength(2), Validators.maxLength(50)],
-    }),
     name: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -66,7 +61,7 @@ export class ProductDetailsComponent implements OnInit {
 
   populateForm() {
     Object.keys(this.productInfo).forEach((key) => {
-      if (this.productForm.get(key)) {
+      if (this.productForm.get(key) && key !== '_id') {
         this.productForm
           .get(key)
           ?.patchValue(this.productInfo[key as keyof IProduct], {
