@@ -23,4 +23,9 @@ describe('TabsPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('sould have Pantry tab', () => {
+    const pantryTab = fixture.nativeElement.querySelector('[tab=pantry]');
+    expect(pantryTab).toBeTruthy();
+  });
 });
