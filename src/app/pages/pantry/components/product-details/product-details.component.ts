@@ -79,7 +79,7 @@ export class ProductDetailsComponent implements OnInit {
     return this.modalCtrl.dismiss(false);
   }
 
-  async handleSubmit() {
+  handleSubmit() {
     if (!this.productInfo) {
       this.createProduct();
       return;
