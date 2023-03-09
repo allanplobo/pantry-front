@@ -9,6 +9,8 @@ import { FeedbackService } from '../../../services/feedback.service';
 
 import { ProductsService } from './products.service';
 
+// TODO: improve unit tests
+
 const notificationsServiceMock = {
   showToast: jasmine.createSpy('showToast'),
 };

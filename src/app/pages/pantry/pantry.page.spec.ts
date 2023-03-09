@@ -4,6 +4,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { PantryPage } from './pantry.page';
 
+// TODO: write unit tests
+
 describe('PantryPage', () => {
   let component: PantryPage;
   let fixture: ComponentFixture<PantryPage>;

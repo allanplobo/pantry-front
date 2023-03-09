@@ -6,6 +6,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProductsService } from '../../services/products.service';
 import { ProductDetailsComponent } from './product-details.component';
 
+// TODO: write unit tests
+
 describe('ProductDetailsComponent', () => {
   let component: ProductDetailsComponent;
   let fixture: ComponentFixture<ProductDetailsComponent>;
